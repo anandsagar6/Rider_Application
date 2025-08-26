@@ -19,7 +19,7 @@ Here are some screenshots of the app:
 
 | Home Screen | Ride Request | Map View |
 |-------------|--------------|----------|
-| ![Home](https://drive.google.com/file/d/1tTgt9JdLnYbqWbuYddEekhRuH99v0-gC/view?usp=sharing) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
+| ![Home](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0007.jpg) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
 
 ## 🚀 How to Run
 1. Clone this repository  
