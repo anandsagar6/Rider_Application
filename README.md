@@ -19,7 +19,7 @@ Here are some screenshots of the app:
 
 | Home Screen | Ride Request | Map View |
 |-------------|--------------|----------|
-| ![Home](screenshots/home.png) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
+| ![Home](C:\Users\Anand Sagar\AndroidStudioProjects\Rider\app\src\main\res\drawable\auto.png) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
 
 ## 🚀 How to Run
 1. Clone this repository  
