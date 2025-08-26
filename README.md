@@ -19,7 +19,7 @@ Here are some screenshots of the app:
 
 | Home Screen | Ride Request | Map View |
 |-------------|--------------|----------|
-| ![Home](C:\Users\Anand Sagar\AndroidStudioProjects\Rider\app\src\main\res\drawable\auto.png) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
+| ![Home](https://drive.google.com/file/d/1tTgt9JdLnYbqWbuYddEekhRuH99v0-gC/view?usp=sharing) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
 
 ## 🚀 How to Run
 1. Clone this repository  
