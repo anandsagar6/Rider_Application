@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Top-left rounded square (x=12,y=12, size=32, rx=8) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M20,12
+                          h16
+                          a8,8 0 0 1 8,8
+                          v16
+                          a8,8 0 0 1 -8,8
+                          h-16
+                          a8,8 0 0 1 -8,-8
+                          v-16
+                          a8,8 0 0 1 8,-8 z"/>
+
+    <!-- Top-right rounded square (x=56,y=12) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M64,12
+                          h16
+                          a8,8 0 0 1 8,8
+                          v16
+                          a8,8 0 0 1 -8,8
+                          h-16
+                          a8,8 0 0 1 -8,-8
+                          v-16
+                          a8,8 0 0 1 8,-8 z"/>
+
+    <!-- Bottom-left rounded square (x=12,y=56) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M20,56
+                          h16
+                          a8,8 0 0 1 8,8
+                          v16
+                          a8,8 0 0 1 -8,8
+                          h-16
+                          a8,8 0 0 1 -8,-8
+                          v-16
+                          a8,8 0 0 1 8,-8 z"/>
+
+    <!-- Bottom-right rounded square (x=56,y=56) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M64,56
+                          h16
+                          a8,8 0 0 1 8,8
+                          v16
+                          a8,8 0 0 1 -8,8
+                          h-16
+                          a8,8 0 0 1 -8,-8
+                          v-16
+                          a8,8 0 0 1 8,-8 z"/>
+</vector>

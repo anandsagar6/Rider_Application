@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_1"
+    tools:context=".ProfileFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Top Banner -->
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/top_background" />
+
+            <!-- Profile Image -->
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="-60dp"
+                android:src="@drawable/profile"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_card"
+                android:padding="4dp" />
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/profileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="22sp"
+                android:textColor="#340865"
+                android:textStyle="bold" />
+
+            <!-- Email -->
+            <TextView
+                android:id="@+id/profileEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Buttons Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/account_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_bg_btn"
+                    android:drawableStart="@drawable/account_setting"
+                    android:drawablePadding="20dp"
+                    android:paddingStart="20dp"
+                    android:text="Account setting"
+                    android:textColor="@color/text"
+                    android:textAllCaps="false"
+                    android:textAlignment="viewStart" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/profile_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_bg_btn"
+                    android:drawableStart="@drawable/setting"
+                    android:drawablePadding="20dp"
+                    android:paddingStart="20dp"
+                    android:text="Personal Information"
+                    android:textColor="@color/text"
+                    android:textAllCaps="false"
+                    android:textAlignment="viewStart" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/review"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_bg_btn"
+                    android:drawableStart="@drawable/review"
+                    android:drawablePadding="20dp"
+                    android:paddingStart="20dp"
+                    android:text="My Review"
+                    android:textColor="@color/text"
+                    android:textAllCaps="false"
+                    android:textAlignment="viewStart" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_bg_btn"
+                    android:drawableStart="@drawable/notification"
+                    android:drawablePadding="20dp"
+                    android:paddingStart="20dp"
+                    android:text="Notification"
+                    android:textColor="@color/text"
+                    android:textAllCaps="false"
+                    android:textAlignment="viewStart" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/finger_print"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/profile_bg_btn"
+                    android:drawableStart="@drawable/fingerprint"
+                    android:drawablePadding="20dp"
+                    android:paddingStart="20dp"
+                    android:text="Fingerprint Setting"
+                    android:textColor="@color/text"
+                    android:textAllCaps="false"
+                    android:textAlignment="viewStart" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/logoutBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/btn_bg"
+                    android:text="Logout"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/profiletodashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/btn_bg"
+                    android:text="Back to main page"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

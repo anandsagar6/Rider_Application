@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "188152886384",
+    "firebase_url": "https://tutor-hunt-c6687-default-rtdb.firebaseio.com",
+    "project_id": "tutor-hunt-c6687",
+    "storage_bucket": "tutor-hunt-c6687.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188152886384:android:29e386a3b87d4f54d0f0b5",
+        "android_client_info": {
+          "package_name": "com.example.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7vOVFVGIdoXvOraEcIQZIyTFegBoB8d8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188152886384:android:d7d779626f73cf93d0f0b5",
+        "android_client_info": {
+          "package_name": "com.example.rider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7vOVFVGIdoXvOraEcIQZIyTFegBoB8d8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188152886384:android:26a4e452ce00837dd0f0b5",
+        "android_client_info": {
+          "package_name": "com.example.videoapk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7vOVFVGIdoXvOraEcIQZIyTFegBoB8d8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

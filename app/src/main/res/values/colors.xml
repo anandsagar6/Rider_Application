@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#FFC107</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="colorTextsecond">#777474</color>
+    <color name="coloetextfirst">#000000</color>
+    <color name="color_view">#A5A2A2</color>
+    <color name="Dark">#969071</color>
+    <color name="lavender">#8692f7</color>
+    <color name="text">#340865</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="nav_item_selector">#000</color>
+
+</resources>

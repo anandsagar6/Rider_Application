@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">education app</string>
+    <string name="we_will_send_you_an_otp_on_this_given_mobile_number">We will send you an OTP on this given mobile number</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="please_enter_the_otp_sent_to_you" />
+    <string name="hello_blank_fragment" />
+    <string name="Open">OpenDrawer</string>
+    <string name="Close">CloseDrawer</string>
+    <string name="home">home</string>
+    <string name="profie">profie</string>
+    <string name="notes">notes</string>
+    <string name="anand_sagar">Anand sagar</string>
+    <string name="google_maps_key">AIzaSyDmIOAU2Dvqbl7RB_R9xSNz6747P9_Ssbg</string>
+
+</resources>
