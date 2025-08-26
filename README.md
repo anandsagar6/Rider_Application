@@ -21,13 +21,10 @@ Here are some screenshots of the app:
 |-------------|--------------|----------|
 | ![Home Screen](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0006.jpg) | ![Vehicle Type](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0005.jpg) | ![ Wait For Driver](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0007.jpg) |
 
-| Ride History | Profile | Searching Ride |
-|--------------|---------|----------------|
-| ![History](screenshots/history.png) | ![Profile](screenshots/profile.png) | ![Searching](screenshots/searching.png) |
+| Ride History | Profile  |
+|--------------|---------|
+| ![History](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0004.jpg) | ![Profile](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0003.jpg) |
 
 
 
-## 🚀 How to Run
-1. Clone this repository  
-   ```bash
-   git clone https://github.com/your-username/rider-app.git
+
