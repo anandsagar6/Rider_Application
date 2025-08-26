@@ -14,12 +14,18 @@ A ride-booking Android application that allows users to request rides with real-
 - **Frameworks & Tools:** Android Studio, Firebase  
 - **APIs:** Google Maps API  
 
-## 📸 Screenshots
-Here are some screenshots of the app:  
+📸 Screenshots
+Home
+https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0006.jpg
 
-| Home Screen | Ride Request | Map View |
-|-------------|--------------|----------|
-| ![Home](https://github.com/anandsagar6/Rider_Application/blob/master/IMG-20250826-WA0007.jpg) | ![Request](screenshots/request.png) | ![Map](screenshots/map.png) |
+Profile	Activities / Ride History
+
+	
+Choose a Ride	Plan Your Ride
+
+	
+Searching for Driver
+
 
 ## 🚀 How to Run
 1. Clone this repository  
