@@ -26,6 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class WaitForDriver_Activity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -94,24 +98,37 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     }
 
     /**
-     * ✅ Helper method to update ride status in both:
+     * ✅ Update ride status everywhere:
      * 1. Rides/{rideId}
      * 2. Customers/{customerId}/rides/{rideId}
+     * 3. drivers/{driverId}/rides/{rideId}
      */
     private void updateRideStatus(String status) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+
+        // 1️⃣ Rides node
         if (rideRef != null) {
             rideRef.child("status").setValue(status);
         }
 
+        // 2️⃣ Customers node
         if (customerId != null && rideId != null) {
-            DatabaseReference customerRideRef = FirebaseDatabase.getInstance()
-                    .getReference("Customers")
+            rootRef.child("Customers")
                     .child(customerId)
                     .child("rides")
                     .child(rideId)
-                    .child("status");
+                    .child("status")
+                    .setValue(status);
+        }
 
-            customerRideRef.setValue(status);
+        // 3️⃣ Drivers node
+        if (driverId != null && rideId != null) {
+            rootRef.child("drivers")
+                    .child(driverId)
+                    .child("rides")
+                    .child(rideId)
+                    .child("status")
+                    .setValue(status);
         }
     }
 
@@ -122,8 +139,8 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                 String status = snapshot.getValue(String.class);
 
                 // format current time like "hh:mm a"
-                String currentTime = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault())
-                        .format(new java.util.Date());
+                String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault())
+                        .format(new Date());
 
                 if ("waiting".equals(status)) {
                     // No driver yet → mark and delete
@@ -349,6 +366,7 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         intent.putExtra("destinationAddress", destinationAddress);
 
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 
@@ -363,5 +381,12 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         if (rideListener != null) rideRef.removeEventListener(rideListener);
         if (driverRef != null && driverLocationListener != null) driverRef.removeEventListener(driverLocationListener);
         if (countDownTimer != null) countDownTimer.cancel();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Apply reverse transition when going back
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

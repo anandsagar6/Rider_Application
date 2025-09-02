@@ -3,5 +3,9 @@
     <style name="Base.Theme.Rider" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="statusBarBackground">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/black</item>
+
     </style>
 </resources>

@@ -226,6 +226,8 @@ public class Address_Activity extends AppCompatActivity implements OnMapReadyCal
                             intent.putExtra("ride_id", rideId);
                             intent.putExtra("d", Drop_address);
                             startActivity(intent);
+
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else {
                             Toast.makeText(this, "Failed to confirm ride, try again", Toast.LENGTH_SHORT).show();
                         }
@@ -322,4 +324,12 @@ public class Address_Activity extends AppCompatActivity implements OnMapReadyCal
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Apply reverse transition when going back
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
 }

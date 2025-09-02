@@ -222,7 +222,8 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
         intent.putExtra("distance_km", distance);
         intent.putExtra("pickup", etPickupLocation.getText().toString().trim());
         intent.putExtra("destination_address", etDestination.getText().toString().trim());
-        startActivity(intent);
+        requireActivity().startActivity(intent);
+        requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override

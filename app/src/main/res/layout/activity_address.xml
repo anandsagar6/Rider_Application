@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:orientation="vertical"
+        android:background="@drawable/bg_card"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="250dp">
 
@@ -33,7 +34,6 @@
             android:id="@+id/bottom_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/cardview_bg"
             android:elevation="8dp"
             android:orientation="vertical"
             android:padding="16dp">
@@ -65,7 +65,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="Choose a ride"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
                     android:layout_weight="1"
                     android:paddingStart="10dp"
                     android:text="Premium"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹0.00"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -135,7 +135,7 @@
                     android:layout_weight="1"
                     android:paddingStart="10dp"
                     android:text="Sedan"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹0.00"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -175,7 +175,7 @@
                     android:layout_weight="1"
                     android:paddingStart="10dp"
                     android:text="Auto"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -184,7 +184,46 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹0.00"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ambulance_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ride_option_bg"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ambulance" />
+
+                <TextView
+                    android:id="@+id/ambulance_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="10dp"
+                    android:text="Sedan"
+                    android:textColor="@color/text"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ambulance_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0.00"
+                    android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
