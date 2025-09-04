@@ -5,13 +5,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- For showing user location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Let the app run without GPS as “optional” -->
     <uses-feature
         android:name="android.hardware.location.gps"
         android:required="false" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rider"
         tools:targetApi="31">
-
+        <activity
+            android:name=".AfterRideComplete_Activity"
+            android:exported="false" />
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -54,7 +55,7 @@
         <activity
             android:name=".DashBoard"
             android:exported="true"
-            android:theme="@style/Theme.Rider"></activity> <!-- Google Maps API key goes here -->
+            android:theme="@style/Theme.Rider" /> <!-- Google Maps API key goes here -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDmIOAU2Dvqbl7RB_R9xSNz6747P9_Ssbg" />

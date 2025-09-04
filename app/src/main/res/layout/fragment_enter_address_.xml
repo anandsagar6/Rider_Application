@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
-            android:text="Plan Your Ride"
+            android:text="Plan Your Rid"
             android:textColor="@color/text"
             android:textSize="22sp"
             android:gravity="center"
