@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- For showing user location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -39,13 +45,12 @@
             android:exported="false" />
         <activity
             android:name=".SignupActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:exported="false" />
         <activity
             android:name=".WaitForDriver_Activity"
             android:exported="false" />
-        <activity
-            android:name=".Enter_Address_Activity"
-            android:exported="false" />
+
         <activity
             android:name=".Address_Activity"
             android:exported="false" />
@@ -58,7 +63,7 @@
             android:theme="@style/Theme.Rider" /> <!-- Google Maps API key goes here -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDmIOAU2Dvqbl7RB_R9xSNz6747P9_Ssbg" />
+            android:value="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5M2FhN2VkYjBhYTQ3NWE4YjUyOTJlZjNlNDdhMWM0IiwiaCI6Im11cm11cjY0In0=" />
     </application>
 
 </manifest>

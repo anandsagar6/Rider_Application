@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">education app</string>
+    <string name="app_name">Rideer</string>
     <string name="we_will_send_you_an_otp_on_this_given_mobile_number">We will send you an OTP on this given mobile number</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="otp_verification">OTP Verification</string>

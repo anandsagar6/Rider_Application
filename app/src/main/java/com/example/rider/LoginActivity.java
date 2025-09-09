@@ -3,8 +3,10 @@ package com.example.rider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView btnGotoSignup;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnGotoSignup = findViewById(R.id.btnGotoSignup);
+        progressBar = findViewById(R.id.progressBar);
 
         // 🔹 LOGIN button
         btnLogin.setOnClickListener(v -> {
@@ -61,35 +65,48 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            progressBar.setVisibility(View.VISIBLE);
+            btnLogin.setEnabled(false);
+
             // 🔹 Try login
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(loginTask -> {
+                        progressBar.setVisibility(View.GONE);
+                        btnLogin.setEnabled(true);
+
                         if (loginTask.isSuccessful()) {
                             startActivity(new Intent(LoginActivity.this, DashBoard.class));
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                             finish();
                         } else {
-                            // ✅ Get proper Firebase error code
-                            String errorCode = ((FirebaseAuthException) loginTask.getException()).getErrorCode();
+                            Exception e = loginTask.getException();
 
-                            switch (errorCode) {
-                                case "ERROR_USER_NOT_FOUND":
-                                    edtEmail.setError("No account found with this email");
-                                    edtEmail.requestFocus();
-                                    break;
+                            if (e instanceof FirebaseAuthException) {
+                                String errorCode = ((FirebaseAuthException) e).getErrorCode();
 
-                                case "ERROR_WRONG_PASSWORD":
-                                    edtPassword.setError("Incorrect password");
-                                    edtPassword.requestFocus();
-                                    break;
+                                switch (errorCode) {
+                                    case "ERROR_USER_NOT_FOUND":
+                                        edtEmail.setError("No account found with this email");
+                                        edtEmail.requestFocus();
+                                        break;
 
-                                case "ERROR_INVALID_EMAIL":
-                                    edtEmail.setError("Invalid email format");
-                                    edtEmail.requestFocus();
-                                    break;
+                                    case "ERROR_WRONG_PASSWORD":
+                                        edtPassword.setError("Incorrect password");
+                                        edtPassword.requestFocus();
+                                        break;
 
-                                default:
-                                    Toast.makeText(this, "Login Failed: " + loginTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    break;
+                                    case "ERROR_INVALID_EMAIL":
+                                        edtEmail.setError("Invalid email format");
+                                        edtEmail.requestFocus();
+                                        break;
+
+                                    default:
+                                        Toast.makeText(this, "Login Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            } else {
+                                // Handle other Firebase errors safely
+                                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });

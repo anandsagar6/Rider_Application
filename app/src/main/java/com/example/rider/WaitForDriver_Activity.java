@@ -53,6 +53,9 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     private double pickupLat = 0.0, pickupLng = 0.0;
     private String pickupAddress = "", destinationAddress = "";
 
+    // keep last known driver position even if map isn't ready yet
+    private Double lastDriverLat = null, lastDriverLng = null;
+
     private ValueEventListener rideListener, driverLocationListener;
     private boolean isNavigatingBack = false;
 
@@ -113,6 +116,7 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     }
 
     private void cancelRide() {
+        if (rideRef == null) return;
         rideRef.child("status").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -125,6 +129,10 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                             "Ride Cancelled by You ❌",
                             Toast.LENGTH_SHORT).show();
                     goBackToBooking();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(WaitForDriver_Activity.this,
+                            "Failed to cancel ride: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 });
             }
 
@@ -134,6 +142,8 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     }
 
     private void listenForRideUpdates() {
+        if (rideRef == null) return;
+
         rideListener = rideRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,14 +189,17 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                             timerText.setText("");
                         }
 
-                        if (driverId != null) {
+                        if (driverId != null && !driverId.isEmpty()) {
                             // If driverName already saved in ride, use it; else fetch from drivers/info
                             String savedDriverName = snapshot.child("driverName").getValue(String.class);
                             if (savedDriverName != null && !savedDriverName.isEmpty()) {
                                 driverName = savedDriverName;
                             }
+
                             showDriverDetails(driverId);
                             listenForDriverLocation(driverId);
+                        } else {
+                            Log.w("WaitForDriver", "Driver accepted but driverId is null/empty in ride node");
                         }
 
                         fetchCustomerPin();
@@ -249,13 +262,16 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     }
 
     private void fetchCustomerPin() {
+        if (customerRef == null || customerId == null) return;
         customerRef.child(customerId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String pin = snapshot.child("pin").getValue(String.class);
-                    pinText.setVisibility(TextView.VISIBLE);
-                    pinText.setText("PIN: " + pin);
+                    if (pin != null && !pin.isEmpty()) {
+                        pinText.setVisibility(TextView.VISIBLE);
+                        pinText.setText("PIN: " + pin);
+                    }
                 }
             }
 
@@ -269,6 +285,8 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
      * Also updates driverName into Rides/Customers/drivers ride nodes (no overwrite).
      */
     private void showDriverDetails(String driverId) {
+        if (driverId == null || driverId.isEmpty()) return;
+
         DatabaseReference driverInfoRef = FirebaseDatabase.getInstance()
                 .getReference("drivers").child(driverId).child("info");
 
@@ -308,21 +326,34 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         return v == null ? "" : v;
     }
 
-    private String nz(String v) { return v == null ? "Not Available" : v; }
+    private String nz(String v) { return (v == null || v.isEmpty()) ? "Not Available" : v; }
 
     private void listenForDriverLocation(String driverId) {
+        if (driverId == null || driverId.isEmpty()) return;
+
         driverRef = FirebaseDatabase.getInstance().getReference("drivers").child(driverId);
+
+        // Remove previous listener if any
+        if (driverLocationListener != null && driverRef != null) {
+            try { driverRef.removeEventListener(driverLocationListener); } catch (Exception ignored) {}
+        }
 
         driverLocationListener = driverRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists() && mMap != null) {
-                    Double lat = snapshot.child("currentLat").getValue(Double.class);
-                    Double lng = snapshot.child("currentLng").getValue(Double.class);
+                if (!snapshot.exists()) return;
 
-                    if (lat != null && lng != null) {
-                        LatLng driverPos = new LatLng(lat, lng);
+                Double lat = snapshot.child("currentLat").getValue(Double.class);
+                Double lng = snapshot.child("currentLng").getValue(Double.class);
 
+                // store last known position so we can add marker once map is ready
+                lastDriverLat = lat;
+                lastDriverLng = lng;
+
+                if (lat != null && lng != null) {
+                    LatLng driverPos = new LatLng(lat, lng);
+
+                    if (mMap != null) {
                         if (driverMarker == null) {
                             driverMarker = mMap.addMarker(new MarkerOptions()
                                     .position(driverPos)
@@ -332,23 +363,29 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                         } else {
                             driverMarker.setPosition(driverPos);
                         }
-
-                        if (pickupLat != 0 && pickupLng != 0) {
-                            float[] results = new float[1];
-                            Location.distanceBetween(lat, lng, pickupLat, pickupLng, results);
-                            float kmAway = results[0] / 1000f;
-                            distanceText.setText("Driver is " + String.format(Locale.getDefault(), "%.2f", kmAway) + " km away");
-                        }
                     }
+
+                    if (pickupLat != 0 && pickupLng != 0) {
+                        float[] results = new float[1];
+                        Location.distanceBetween(lat, lng, pickupLat, pickupLng, results);
+                        float kmAway = results[0] / 1000f;
+                        distanceText.setText("Driver is " + String.format(Locale.getDefault(), "%.2f", kmAway) + " km away");
+                    }
+                } else {
+                    Log.w("WaitForDriver", "Driver location missing (currentLat/currentLng)");
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("WaitForDriver", "Driver location listener cancelled: " + error.getMessage());
+            }
         });
     }
 
     private void startAutoCancelTimer() {
+        if (countDownTimer != null) countDownTimer.cancel();
+
         countDownTimer = new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -358,6 +395,7 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
 
             @Override
             public void onFinish() {
+                if (rideRef == null) return;
                 rideRef.child("status").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -371,7 +409,7 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                                                 "No driver accepted. Ride cancelled & deleted!",
                                                 Toast.LENGTH_LONG).show();
                                         goBackToBooking();
-                                    });
+                                    }).addOnFailureListener(e -> Log.e("WaitForDriver", "Failed to remove ride: " + e.getMessage()));
                         }
                     }
 
@@ -398,12 +436,26 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // If we already have the driver's last known position add marker
+        if (lastDriverLat != null && lastDriverLng != null) {
+            LatLng driverPos = new LatLng(lastDriverLat, lastDriverLng);
+            if (driverMarker == null) {
+                driverMarker = mMap.addMarker(new MarkerOptions()
+                        .position(driverPos)
+                        .title("Driver")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driverPos, 15));
+            } else {
+                driverMarker.setPosition(driverPos);
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (rideListener != null) rideRef.removeEventListener(rideListener);
+        if (rideListener != null && rideRef != null) rideRef.removeEventListener(rideListener);
         if (driverRef != null && driverLocationListener != null)
             driverRef.removeEventListener(driverLocationListener);
         if (countDownTimer != null) countDownTimer.cancel();

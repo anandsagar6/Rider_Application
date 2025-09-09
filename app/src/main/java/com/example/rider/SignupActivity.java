@@ -2,8 +2,10 @@ package com.example.rider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView btnGotoLogin;
     private FirebaseAuth mAuth;
     private DatabaseReference dbRef;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class SignupActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         btnSignup = findViewById(R.id.btnSignup);
         btnGotoLogin = findViewById(R.id.btnGotoLogin);
+        progressBar = findViewById(R.id.progressBarSignup);
 
         mAuth = FirebaseAuth.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference("Customers");
@@ -55,7 +59,7 @@ public class SignupActivity extends AppCompatActivity {
             if (phone.isEmpty()) {
                 edtPhone.setError("Phone is required");
                 isValid = false;
-            } else if (!phone.matches("\\d{10}")) {  // ✅ Must be 10 digits
+            } else if (!phone.matches("\\d{10}")) {
                 edtPhone.setError("Enter a valid 10-digit phone number");
                 isValid = false;
             }
@@ -66,14 +70,16 @@ public class SignupActivity extends AppCompatActivity {
             if (password.isEmpty()) {
                 edtPassword.setError("Password is required");
                 isValid = false;
-            } else if (password.length() < 6) {  // ✅ Minimum 6 characters
+            } else if (password.length() < 6) {
                 edtPassword.setError("Password must be at least 6 characters long");
                 isValid = false;
             }
 
             if (!isValid) return;
 
-            // ✅ Check if phone already exists in DB
+            progressBar.setVisibility(View.VISIBLE);
+            btnSignup.setEnabled(false);
+
             dbRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     boolean phoneExists = false;
@@ -88,12 +94,15 @@ public class SignupActivity extends AppCompatActivity {
                     if (phoneExists) {
                         edtPhone.setError("This phone number is already registered");
                         edtPhone.requestFocus();
+                        progressBar.setVisibility(View.GONE);
+                        btnSignup.setEnabled(true);
                     } else {
-                        // ✅ Proceed with Firebase Auth
                         createNewUser(name, phone, email, password);
                     }
                 } else {
                     edtPhone.setError("Error checking phone number. Try again.");
+                    progressBar.setVisibility(View.GONE);
+                    btnSignup.setEnabled(true);
                 }
             });
         });
@@ -101,20 +110,21 @@ public class SignupActivity extends AppCompatActivity {
         btnGotoLogin.setOnClickListener(v -> {
             Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         });
     }
 
     private void createNewUser(String name, String phone, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
+            btnSignup.setEnabled(true);
+
             if (task.isSuccessful()) {
                 String uid = mAuth.getCurrentUser().getUid();
 
-                // ✅ Generate random 4-digit PIN
                 int pin = 1000 + new Random().nextInt(9000);
 
-                // Save customer data + pin into Firebase
                 Map<String, Object> customerData = new HashMap<>();
                 customerData.put("name", name);
                 customerData.put("phone", phone);
@@ -123,10 +133,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 dbRef.child(uid).setValue(customerData).addOnCompleteListener(saveTask -> {
                     if (saveTask.isSuccessful()) {
-                        edtPassword.setError("Signup Successful! Your PIN: " + pin);
-                        edtPassword.requestFocus();
-
-                        startActivity(new Intent(SignupActivity.this, DashBoard.class));
+                        Intent intent = new Intent(SignupActivity.this, DashBoard.class);
+                        startActivity(intent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         finish();
                     } else {
                         edtPassword.setError("Error: " + saveTask.getException().getMessage());
@@ -138,10 +147,9 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Apply reverse transition when going back
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
-
 }

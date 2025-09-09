@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,28 +21,28 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallback {
+public class EnterAddress_Fragment extends Fragment {
 
     private EditText etPickupLocation, etDestination;
     private Button btnConfirm;
     private ProgressBar progressBar;
 
+    private MapView mapView;
     private FusedLocationProviderClient fusedLocationClient;
-    private GoogleMap googleMap;
-    private LatLng currentLatLng;
+    private GeoPoint currentGeoPoint;
     private String currentAddress = "";
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
@@ -63,22 +64,24 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
         btnConfirm = view.findViewById(R.id.confirm_btn);
         progressBar = view.findViewById(R.id.progressBar);
 
+        // osmdroid setup
+        Configuration.getInstance().load(requireContext().getApplicationContext(),
+                PreferenceManager.getDefaultSharedPreferences(requireContext().getApplicationContext()));
+
+        mapView = view.findViewById(R.id.osm_map);
+        mapView.setMultiTouchControls(true);
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(15.0);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
-        // ✅ If last drop passed from Home_Fragment, set it in Destination box
+        // If last drop passed from Home_Fragment, set it in Destination box
         if (getArguments() != null) {
             String lastDrop = getArguments().getString("lastDrop", "");
             if (!lastDrop.isEmpty()) {
                 String cityState = getCityStateFromName(lastDrop);
                 etDestination.setText(cityState);
             }
-        }
-
-        // Map setup
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map_view);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
         }
 
         fetchCurrentLocation();
@@ -89,29 +92,41 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onResume() {
         super.onResume();
-        // ✅ Reset UI when coming back
+        if (mapView != null) mapView.onResume();
         if (btnConfirm != null) btnConfirm.setVisibility(View.VISIBLE);
         if (progressBar != null) progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mapView != null) mapView.onPause();
+    }
+
     private void handleLocationUpdate(Location location) {
-        currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        currentGeoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
         currentAddress = getAddressFromCoordinates(location.getLatitude(), location.getLongitude());
 
         etPickupLocation.setHint("Current location");
         etPickupLocation.setText(currentAddress);
 
-        if (googleMap != null) {
-            updateMapWithCurrentLocation();
-        }
+        updateMapWithCurrentLocation();
     }
 
     private void updateMapWithCurrentLocation() {
-        googleMap.clear(); // ✅ prevent duplicate markers
-        googleMap.addMarker(new MarkerOptions()
-                .position(currentLatLng)
-                .title("You are here"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f));
+        mapView.getOverlays().clear();
+
+        if (currentGeoPoint != null) {
+            IMapController mapController = mapView.getController();
+            mapController.setCenter(currentGeoPoint);
+
+            Marker startMarker = new Marker(mapView);
+            startMarker.setPosition(currentGeoPoint);
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            startMarker.setTitle("You are here");
+            mapView.getOverlays().add(startMarker);
+        }
+        mapView.invalidate();
     }
 
     private void validateAndCalculateDistance() {
@@ -128,7 +143,6 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
             return;
         }
 
-        // ✅ Hide button and show progress bar
         btnConfirm.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -138,34 +152,34 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
     private void calculateDistance(String pickupAddress, String destinationAddress) {
         new Thread(() -> {
             try {
-                LatLng pickupLatLng = getLatLngFromAddress(pickupAddress, "Pickup");
-                LatLng destLatLng = getLatLngFromAddress(destinationAddress, "Destination");
+                GeoPoint pickupPoint = getGeoPointFromAddress(pickupAddress, "Pickup");
+                GeoPoint destPoint = getGeoPointFromAddress(destinationAddress, "Destination");
 
-                if (pickupLatLng == null || destLatLng == null) {
+                if (pickupPoint == null || destPoint == null) {
                     requireActivity().runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                     return;
                 }
 
-                float distance = calculateDistanceBetween(pickupLatLng, destLatLng);
+                float distance = calculateDistanceBetween(pickupPoint, destPoint);
 
                 requireActivity().runOnUiThread(() -> {
-                    updateMapWithBothLocations(pickupLatLng, destLatLng, pickupAddress, destinationAddress);
-                    showDistanceResult(distance);
+                    updateMapWithBothLocations(pickupPoint, destPoint, pickupAddress, destinationAddress);
+
                     progressBar.setVisibility(View.GONE);
-                    navigateToNextActivity(pickupLatLng, destLatLng, pickupAddress, destinationAddress, distance);
+                    navigateToNextActivity(pickupPoint, destPoint, pickupAddress, destinationAddress, distance);
                 });
 
             } catch (Exception e) {
                 requireActivity().runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    btnConfirm.setVisibility(View.VISIBLE); // ✅ show again on error
+                    btnConfirm.setVisibility(View.VISIBLE);
                     Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         }).start();
     }
 
-    private LatLng getLatLngFromAddress(String address, String type) throws IOException {
+    private GeoPoint getGeoPointFromAddress(String address, String type) throws IOException {
         Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocationName(address, 1);
 
@@ -179,82 +193,56 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
         }
 
         Address result = addresses.get(0);
-        return new LatLng(result.getLatitude(), result.getLongitude());
+        return new GeoPoint(result.getLatitude(), result.getLongitude());
     }
 
-    private float calculateDistanceBetween(LatLng origin, LatLng destination) {
+    private float calculateDistanceBetween(GeoPoint origin, GeoPoint destination) {
         float[] results = new float[1];
         Location.distanceBetween(
-                origin.latitude, origin.longitude,
-                destination.latitude, destination.longitude,
+                origin.getLatitude(), origin.getLongitude(),
+                destination.getLatitude(), destination.getLongitude(),
                 results
         );
         return results[0] / 1000;
     }
 
-    private void updateMapWithBothLocations(LatLng pickup, LatLng destination,
+    private void updateMapWithBothLocations(GeoPoint pickup, GeoPoint destination,
                                             String pickupAddr, String destAddr) {
-        googleMap.clear();
-        googleMap.addMarker(new MarkerOptions()
-                .position(pickup)
-                .title("Pickup: " + pickupAddr));
-        googleMap.addMarker(new MarkerOptions()
-                .position(destination)
-                .title("Destination: " + destAddr));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pickup, 12f));
+        mapView.getOverlays().clear();
+
+        Marker pickupMarker = new Marker(mapView);
+        pickupMarker.setPosition(pickup);
+        pickupMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        pickupMarker.setTitle("Pickup: " + pickupAddr);
+        mapView.getOverlays().add(pickupMarker);
+
+        Marker destMarker = new Marker(mapView);
+        destMarker.setPosition(destination);
+        destMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        destMarker.setTitle("Destination: " + destAddr);
+        mapView.getOverlays().add(destMarker);
+
+        IMapController mapController = mapView.getController();
+        mapController.setCenter(pickup);
+        mapController.setZoom(12.0);
+
+        mapView.invalidate();
     }
 
-    private void showDistanceResult(float distanceKm) {
-        Toast.makeText(requireContext(),
-                String.format("Distance: %.2f km", distanceKm),
-                Toast.LENGTH_LONG).show();
-    }
 
-    private void navigateToNextActivity(LatLng pickup, LatLng destination,
+
+    private void navigateToNextActivity(GeoPoint pickup, GeoPoint destination,
                                         String pickupAddr, String destAddr, float distance) {
         Intent intent = new Intent(requireActivity(), Address_Activity.class);
-        intent.putExtra("pickup_lat", pickup.latitude);
-        intent.putExtra("pickup_lng", pickup.longitude);
+        intent.putExtra("pickup_lat", pickup.getLatitude());
+        intent.putExtra("pickup_lng", pickup.getLongitude());
         intent.putExtra("pickup_address", pickupAddr);
-        intent.putExtra("dest_lat", destination.latitude);
-        intent.putExtra("dest_lng", destination.longitude);
+        intent.putExtra("dest_lat", destination.getLatitude());
+        intent.putExtra("dest_lng", destination.getLongitude());
         intent.putExtra("dest_address", destAddr);
         intent.putExtra("distance_km", distance);
-        intent.putExtra("pickup", etPickupLocation.getText().toString().trim());
-        intent.putExtra("destination_address", etDestination.getText().toString().trim());
         requireActivity().startActivity(intent);
         requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        this.googleMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        }
-
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-
-        if (currentLatLng != null) {
-            updateMapWithCurrentLocation();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                fetchCurrentLocation();
-            } else {
-                Toast.makeText(requireContext(), "Location permission required", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private String getAddressFromCoordinates(double lat, double lng) {
@@ -276,16 +264,10 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
             List<Address> addresses = geocoder.getFromLocationName(placeName, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address addr = addresses.get(0);
-
                 String city = addr.getLocality();
                 if (city == null) city = placeName;
                 String state = addr.getAdminArea();
-
-                if (state != null) {
-                    return city + ", " + state;
-                } else {
-                    return city;
-                }
+                return state != null ? city + ", " + state : city;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -293,7 +275,6 @@ public class EnterAddress_Fragment extends Fragment implements OnMapReadyCallbac
         return placeName;
     }
 
-    // ✅ Dummy method for location fetch (you should have real implementation)
     private void fetchCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);

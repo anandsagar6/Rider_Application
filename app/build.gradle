@@ -57,6 +57,16 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.9.0'
 
+    // Core osmdroid
+    implementation 'org.osmdroid:osmdroid-android:6.1.20'
+
+    // Bonus Pack (correct dependency from JitPack)
+    implementation 'com.github.MKergall:osmbonuspack:6.9.0'
+
+    // Optional for HTTP requests to routing APIs
+    implementation 'com.squareup.okhttp3:okhttp:5.1.0'
+
+    implementation "com.airbnb.android:lottie:6.6.7"
 
 
 

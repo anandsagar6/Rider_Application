@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/white"
+    android:focusableInTouchMode="true"
     tools:context=".SignupActivity">
 
     <LinearLayout
@@ -103,6 +104,15 @@
                 android:background="@drawable/btn_bg"
                 android:layout_marginTop="20dp"
                 android:padding="14dp" />
+
+            <!-- ProgressBar -->
+            <ProgressBar
+                android:id="@+id/progressBarSignup"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="20dp" />
 
             <!-- Login Redirect -->
             <TextView

@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_TIME = 2000; // 2 seconds
+    private static final int SPLASH_TIME = 2000; // 3 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +23,12 @@ public class SplashActivity extends AppCompatActivity {
             if (currentUser != null) {
                 // already logged in → go to MainActivity
                 startActivity(new Intent(SplashActivity.this, DashBoard.class));
+                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                 finish();
             } else {
                 // not logged in → go to LoginActivity
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
                 finish();
             }
             finish();
