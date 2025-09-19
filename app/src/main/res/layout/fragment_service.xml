@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none"
-    tools:context=".Home_Fragment">
+    tools:context=".Service_Fragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -26,9 +26,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rider"
+                android:text="Rideer"
                 android:textSize="32sp"
                 android:textStyle="bold"
+                android:fontFamily="@font/amaranth"
                 android:textColor="@android:color/white" />
 
             <!-- Search bar -->
@@ -144,25 +145,143 @@
                 <ImageView
                     android:layout_width="140dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/premium"
+                    android:src="@drawable/moto"
                 android:scaleType="fitCenter"
                 android:contentDescription="Car" />
             </LinearLayout>
 
-            <!-- Bottom Navigation -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="bottom"
+                android:layout_height="140dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:background="#1E1E1E">
+                android:padding="12dp"
+                android:elevation="20dp"
+                android:background="@drawable/background_1">
 
+                <!-- Left Side Text -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enjoy 6% off select rides"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
 
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Book now"
+                        android:backgroundTint="#000000"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
 
-
+                <!-- Right Side Car Image -->
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/auto"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Car" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:elevation="20dp"
+                android:background="@drawable/background_1">
+
+                <!-- Left Side Text -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enjoy 6% off select rides"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Book now"
+                        android:backgroundTint="#000000"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+
+                <!-- Right Side Car Image -->
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/premium"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Car" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:elevation="20dp"
+                android:background="@drawable/background_1">
+
+                <!-- Left Side Text -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enjoy 6% off select rides"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Book now"
+                        android:backgroundTint="#000000"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+
+                <!-- Right Side Car Image -->
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/amblance"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Car" />
+            </LinearLayout>
+
+
+
+
 
         </LinearLayout>
 

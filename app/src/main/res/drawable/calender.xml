@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- Bottom shadow ellipse -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M96,472c0,16 96,32 160,32s160,-16 160,-32 -96,-32 -160,-32 -160,16 -160,32z"/>
+
+    <!-- Main calendar body with rounded corners -->
+    <path
+        android:fillColor="#26C6DA"
+        android:pathData="M64,128h384a32,32 0 0 1 32,32v288a32,32 0 0 1 -32,32H64a32,32 0 0 1 -32,-32V160a32,32 0 0 1 32,-32z"
+        android:strokeWidth="0"
+        android:strokeColor="@android:color/transparent"
+        android:strokeLineJoin="round"/>
+
+    <!-- Calendar header -->
+    <path
+        android:fillColor="#EF5350"
+        android:pathData="M32,128h448v64a32,32 0 0 1 -32,32H64a32,32 0 0 1 -32,-32v-64z"/>
+
+    <!-- Top tabs -->
+    <path
+        android:fillColor="#29B6F6"
+        android:pathData="M128,32a24,24 0 0 1 24,24v72h-48V56a24,24 0 0 1 24,-24z"/>
+
+    <path
+        android:fillColor="#29B6F6"
+        android:pathData="M360,32a24,24 0 0 1 24,24v72h-48V56a24,24 0 0 1 24,-24z"/>
+
+    <!-- Calendar day squares -->
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M128,240h80v80h-80z"/>
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M232,240h80v80h-80z"/>
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M336,240h80v80h-80z"/>
+
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M128,344h80v80h-80z"/>
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M232,344h80v80h-80z"/>
+    <path android:fillColor="#00838F" android:fillAlpha="0.85" android:pathData="M336,344h80v80h-80z"/>
+
+    <!-- Left highlight -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.15"
+        android:pathData="M64,160h48v256H64a32,32 0 0 1 -32,-32V192a32,32 0 0 1 32,-32z"/>
+
+</vector>

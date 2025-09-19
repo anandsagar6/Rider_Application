@@ -112,6 +112,8 @@
                 android:orientation="horizontal"
                 android:padding="8dp">
 
+
+
                 <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -129,6 +131,33 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="start"
+                    android:gravity="start"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/person"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="10dp"
+                        android:text="1 member"
+                        android:textColor="@color/text"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/Moto_price"
                     android:layout_width="wrap_content"
@@ -137,6 +166,8 @@
                     android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+
             </LinearLayout>
 
 
@@ -170,6 +201,33 @@
                     android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="start"
+                    android:gravity="start"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/person"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="10dp"
+                        android:text="6 member"
+                        android:textColor="@color/text"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/premium_price"
@@ -205,10 +263,37 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingStart="10dp"
-                    android:text="Sedan"
+                    android:text="E-Lite car"
                     android:textColor="@color/text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="start"
+                    android:gravity="start"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/person"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="10dp"
+                        android:text="4 member"
+                        android:textColor="@color/text"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/sedan_price"
@@ -250,6 +335,33 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="start"
+                    android:gravity="start"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/person"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingStart="10dp"
+                        android:text="3 member"
+                        android:textColor="@color/text"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/auto_price"
                     android:layout_width="wrap_content"
@@ -278,7 +390,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/premium" />
+                    android:src="@drawable/amblance" />
 
                 <TextView
                     android:id="@+id/ambulance_text"
@@ -305,9 +417,9 @@
             <Button
                 android:id="@+id/choose_ride_btn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/black"
                 android:text="Choose Ride"
                 android:textColor="@android:color/white" />
 

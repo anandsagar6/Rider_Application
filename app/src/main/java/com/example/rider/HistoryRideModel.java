@@ -1,64 +1,127 @@
 package com.example.rider;
 
 public class HistoryRideModel {
-    private String Drop;
+
+    private String rideId;
+    private String customerId;
+    private String riderName;
+    private String riderPhone;
+    private String driverName;
+    private String pickupName;
+    private String dropAddress;
     private String bookingDate;
     private String bookingTime;
-    private String customerId;
-    private double destLat;
-    private double destLng;
-    private double pickupLat;
-    private double pickupLng;
-    private String pickupName;
-    private String pin;
+    private String driverAcceptTime;
     private String price;
-    private String rideId;
-    private String rideType;
     private String status;
 
-    // Required empty constructor for Firebase
-    public HistoryRideModel() { }
 
-    // Getters & setters
-    public String getDrop() { return Drop; }
-    public void setDrop(String drop) { Drop = drop; }
 
-    public String getBookingDate() { return bookingDate; }
-    public void setBookingDate(String bookingDate) { this.bookingDate = bookingDate; }
+    // Empty constructor required for Firebase
+    public HistoryRideModel() {
+    }
 
-    public String getBookingTime() { return bookingTime; }
-    public void setBookingTime(String bookingTime) { this.bookingTime = bookingTime; }
+    // Getters and Setters
 
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
 
-    public double getDestLat() { return destLat; }
-    public void setDestLat(double destLat) { this.destLat = destLat; }
 
-    public double getDestLng() { return destLng; }
-    public void setDestLng(double destLng) { this.destLng = destLng; }
+    public String getRideId() {
+        return rideId;
+    }
 
-    public double getPickupLat() { return pickupLat; }
-    public void setPickupLat(double pickupLat) { this.pickupLat = pickupLat; }
+    public void setRideId(String rideId) {
+        this.rideId = rideId;
+    }
 
-    public double getPickupLng() { return pickupLng; }
-    public void setPickupLng(double pickupLng) { this.pickupLng = pickupLng; }
+    public String getCustomerId() {
+        return customerId;
+    }
 
-    public String getPickupName() { return pickupName; }
-    public void setPickupName(String pickupName) { this.pickupName = pickupName; }
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-    public String getPin() { return pin; }
-    public void setPin(String pin) { this.pin = pin; }
+    public String getRiderName() {
+        return riderName;
+    }
 
-    public String getPrice() { return price; }
-    public void setPrice(String price) { this.price = price; }
+    public void setRiderName(String riderName) {
+        this.riderName = riderName;
+    }
 
-    public String getRideId() { return rideId; }
-    public void setRideId(String rideId) { this.rideId = rideId; }
+    public String getRiderPhone() {
+        return riderPhone;
+    }
 
-    public String getRideType() { return rideType; }
-    public void setRideType(String rideType) { this.rideType = rideType; }
+    public void setRiderPhone(String riderPhone) {
+        this.riderPhone = riderPhone;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getPickupName() {
+        return pickupName;
+    }
+
+    public void setPickupName(String pickupName) {
+        this.pickupName = pickupName;
+    }
+
+    public String getDropAddress() {
+        return dropAddress;
+    }
+
+    public void setDropAddress(String dropAddress) {
+        this.dropAddress = dropAddress;
+    }
+
+    public String getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(String bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public String getBookingTime() {
+        return bookingTime;
+    }
+
+    public void setBookingTime(String bookingTime) {
+        this.bookingTime = bookingTime;
+    }
+
+    public String getDriverAcceptTime() {
+        return driverAcceptTime;
+    }
+
+    public void setDriverAcceptTime(String driverAcceptTime) {
+        this.driverAcceptTime = driverAcceptTime;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+
+
 }

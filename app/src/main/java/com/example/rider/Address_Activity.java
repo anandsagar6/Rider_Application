@@ -1,5 +1,6 @@
 package com.example.rider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,10 +56,13 @@ public class Address_Activity extends AppCompatActivity {
 
     private static final String ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5M2FhN2VkYjBhYTQ3NWE4YjUyOTJlZjNlNDdhMWM0IiwiaCI6Im11cm11cjY0In0=";
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
+
+
 
         // Intent data
         pickupLat = getIntent().getDoubleExtra("pickup_lat", 0);
@@ -159,15 +163,26 @@ public class Address_Activity extends AppCompatActivity {
 
 
     private void setSelectedOption(LinearLayout selected, String rideType) {
+        // Reset all
         premiumLayout.setSelected(false);
         sedanLayout.setSelected(false);
         autoLayout.setSelected(false);
         ambulanceLayout.setSelected(false);
         MotoLayout.setSelected(false);
+
+        // Highlight only the selected one
         selected.setSelected(true);
+
+        // Update ride type
         selectedRideType = rideType;
         chooseRideBtn.setText("Choose " + rideType.substring(0,1).toUpperCase() + rideType.substring(1));
+
+        if(chooseRideBtn.isSelected()){
+            chooseRideBtn.setVisibility(View.GONE);
+        }
     }
+
+
 
     private void prepareContainerForClicks(LinearLayout layout) {
         layout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
@@ -353,4 +368,60 @@ public class Address_Activity extends AppCompatActivity {
             this.distanceKm = distanceKm;
         }
     }
+
+    private void onDriverAccept(String rideId, String driverId, String driverName, double driverLat, double driverLng) {
+        DatabaseReference ridesRef = FirebaseDatabase.getInstance().getReference("Rides").child(rideId);
+        DatabaseReference customersRef = FirebaseDatabase.getInstance().getReference("Customers");
+        DatabaseReference driversRef = FirebaseDatabase.getInstance().getReference("drivers").child(driverId).child("rides");
+
+        String acceptTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
+
+        // ✅ Update ride info in Rides
+        HashMap<String, Object> rideUpdate = new HashMap<>();
+        rideUpdate.put("driverId", driverId);
+        rideUpdate.put("driverName", driverName);
+        rideUpdate.put("driverLat", driverLat);
+        rideUpdate.put("driverLng", driverLng);
+        rideUpdate.put("driverAcceptTime", acceptTime);
+        rideUpdate.put("status", "accepted");
+
+        ridesRef.updateChildren(rideUpdate).addOnSuccessListener(aVoid -> {
+            ridesRef.get().addOnSuccessListener(snapshot -> {
+                if (snapshot.exists()) {
+                    // ✅ Get customerId
+                    String customerId = snapshot.child("customerId").getValue(String.class);
+
+                    if (customerId != null) {
+                        // update in Customers
+                        customersRef.child(customerId).child("rides").child(rideId).updateChildren(rideUpdate);
+
+                        // fetch customer details
+                        customersRef.child(customerId).get().addOnSuccessListener(customerSnap -> {
+                            String customerName = customerSnap.child("name").getValue(String.class);
+                            String customerPhone = customerSnap.child("phone").getValue(String.class);
+
+                            // ✅ Add full ride + customer data for driver
+                            HashMap<String, Object> driverRideData = new HashMap<>(rideUpdate);
+                            driverRideData.put("pickupName", snapshot.child("pickupName").getValue(String.class));
+                            driverRideData.put("dropAddress", snapshot.child("dropAddress").getValue(String.class));
+                            driverRideData.put("destLat", snapshot.child("destLat").getValue(Double.class));
+                            driverRideData.put("destLng", snapshot.child("destLng").getValue(Double.class));
+                            driverRideData.put("price", snapshot.child("price").getValue(String.class));
+                            driverRideData.put("rideType", snapshot.child("rideType").getValue(String.class));
+
+                            // ✅ add customer info
+                            driverRideData.put("customerId", customerId);
+                            driverRideData.put("customerName", customerName);
+                            driverRideData.put("customerPhone", customerPhone);
+
+                            // save in driver node
+                            driversRef.child(rideId).setValue(driverRideData);
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+
 }

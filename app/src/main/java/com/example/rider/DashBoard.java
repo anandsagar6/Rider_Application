@@ -28,13 +28,12 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
         // Initialize views
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
 
         // ✅ Set default fragment = EnterAddress_Fragment
         if (savedInstanceState == null) {
             loadFragment(new EnterAddress_Fragment());
-            navigationView.setCheckedItem(R.id.nav_home);
+
             bottomNavigationView.setSelectedItemId(R.id.homee); // highlight home in bottom nav
         }
 
@@ -47,7 +46,7 @@ public class DashBoard extends AppCompatActivity implements NavigationView.OnNav
                 if (itemId == R.id.homee) {
                     loadFragment(new EnterAddress_Fragment()); // ✅ Home shows EnterAddress
                 } else if (itemId == R.id.Services) {
-                    loadFragment(new Home_Fragment()); // ✅ Search shows Home_Fragment
+                    loadFragment(new Service_Fragment()); // ✅ Search shows Home_Fragment
                 } else if (itemId == R.id.account) {
                     loadFragment(new ProfileFragment());
                 } else if (itemId == R.id.Activities) {

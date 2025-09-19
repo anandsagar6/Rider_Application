@@ -1,6 +1,7 @@
 package com.example.rider;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,14 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,42 +20,63 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
 
-public class WaitForDriver_Activity extends FragmentActivity implements OnMapReadyCallback {
+public class WaitForDriver_Activity extends FragmentActivity {
 
-    private GoogleMap mMap;
+    private MapView mMap;
+    private MyLocationNewOverlay myLocationOverlay;
+
     private String rideId, driverId, customerId;
+    private String driverName = "", vehicleType = "", vehicleNumber = "", price = "";
 
-    // Cached values for passing to next screen
-    private String driverName = "";
-    private String vehicleType = "";
-    private String vehicleNumber = "";
-    private String price = "";
-
-    private Marker driverMarker;
+    private Marker driverMarker, pickupMarker, destMarker;
     private DatabaseReference rideRef, driverRef, customerRef;
     private CountDownTimer countDownTimer;
 
     private TextView statusText, driverInfo, distanceText, pickupText, destText, timerText, pinText;
 
     private double pickupLat = 0.0, pickupLng = 0.0;
+    private double destLat = 0.0, destLng = 0.0;
     private String pickupAddress = "", destinationAddress = "";
 
-    // keep last known driver position even if map isn't ready yet
     private Double lastDriverLat = null, lastDriverLng = null;
 
     private ValueEventListener rideListener, driverLocationListener;
     private boolean isNavigatingBack = false;
 
+    // ✅ Keep separate overlays for routes
+    private Polyline driverToPickupRoute;
+    private Polyline pickupToDropRoute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wait_for_driver);
+
+        // OSMDroid config
+        Configuration.getInstance().setUserAgentValue(getPackageName());
 
         statusText   = findViewById(R.id.statusText);
         driverInfo   = findViewById(R.id.driverInfo);
@@ -86,15 +100,27 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         Button btnCancelRide = findViewById(R.id.cancelRideBtn);
         btnCancelRide.setOnClickListener(v -> cancelRide());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        if (mapFragment != null) mapFragment.getMapAsync(this);
+        // ✅ Setup OSMDroid MapView
+        mMap = findViewById(R.id.map);
+        mMap.setMultiTouchControls(true);
+        mMap.getController().setZoom(15.0);
+        mMap.getZoomController().setVisibility(org.osmdroid.views.CustomZoomButtonsController.Visibility.NEVER);
+
+        // ✅ Show user location initially
+        showUserLocation();
 
         rideRef = FirebaseDatabase.getInstance().getReference("Rides").child(rideId);
         customerRef = FirebaseDatabase.getInstance().getReference("Customers");
 
         listenForRideUpdates();
         startAutoCancelTimer();
+    }
+
+    private void showUserLocation() {
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMap);
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.enableFollowLocation();
+        mMap.getOverlays().add(myLocationOverlay);
     }
 
     private void updateRideStatus(String status) {
@@ -156,28 +182,38 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                 String status = snapshot.child("status").getValue(String.class);
                 if (status == null) status = "waiting";
 
-                // keep price handy
                 String p = snapshot.child("price").getValue(String.class);
                 if (p != null) price = p;
 
                 statusText.setText("Ride Status: " + status);
 
+                // ✅ Always fetch pickup & destination from Firebase
                 pickupAddress      = snapshot.child("pickupAddress").getValue(String.class);
                 destinationAddress = snapshot.child("destinationAddress").getValue(String.class);
 
                 Double pLat = snapshot.child("pickupLat").getValue(Double.class);
                 Double pLng = snapshot.child("pickupLng").getValue(Double.class);
+                Double dLat = snapshot.child("destLat").getValue(Double.class);
+                Double dLng = snapshot.child("destLng").getValue(Double.class);
 
                 if (pLat != null) pickupLat = pLat;
                 if (pLng != null) pickupLng = pLng;
+                if (dLat != null) destLat = dLat;
+                if (dLng != null) destLng = dLng;
 
                 if (pickupAddress != null)      pickupText.setText("Pickup: " + pickupAddress);
                 if (destinationAddress != null) destText.setText("Destination: " + destinationAddress);
+
+                // ✅ Show pickup & destination markers
+                showPickupAndDestination();
 
                 switch (status) {
                     case "waiting":
                         statusText.setText("Looking for drivers...");
                         pinText.setVisibility(TextView.GONE);
+
+                        // ✅ Show pickup → drop route
+                        drawPickupToDropRoute();
                         break;
 
                     case "accepted":
@@ -190,16 +226,16 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                         }
 
                         if (driverId != null && !driverId.isEmpty()) {
-                            // If driverName already saved in ride, use it; else fetch from drivers/info
-                            String savedDriverName = snapshot.child("driverName").getValue(String.class);
-                            if (savedDriverName != null && !savedDriverName.isEmpty()) {
-                                driverName = savedDriverName;
-                            }
-
                             showDriverDetails(driverId);
                             listenForDriverLocation(driverId);
-                        } else {
-                            Log.w("WaitForDriver", "Driver accepted but driverId is null/empty in ride node");
+
+                            if (lastDriverLat != null && lastDriverLng != null) {
+                                // ✅ Driver → Pickup
+                                fetchRoute(lastDriverLat, lastDriverLng, pickupLat, pickupLng, true);
+                            }
+
+                            // ✅ Pickup → Drop
+                            drawPickupToDropRoute();
                         }
 
                         fetchCustomerPin();
@@ -209,30 +245,11 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                         statusText.setText("Ride in progress...");
                         break;
 
-
                     case "completed":
                         statusText.setText("Ride completed 🎉");
                         updateRideStatus("completed");
                         Toast.makeText(WaitForDriver_Activity.this, "Trip Completed", Toast.LENGTH_LONG).show();
 
-                        // ✅ Always fetch all needed values from snapshot
-                        String dName = snapshot.child("driverName").getValue(String.class);
-                        if (dName != null && !dName.isEmpty()) driverName = dName;
-
-                        String vType  = snapshot.child("vehicleType").getValue(String.class);
-                        String vNum   = snapshot.child("vehicleNumber").getValue(String.class);
-                        String pAddr  = snapshot.child("pickupName").getValue(String.class);
-                        String dAddr  = snapshot.child("Drop").getValue(String.class);
-                        String fare   = snapshot.child("price").getValue(String.class);
-
-                        // ✅ Fallbacks if null
-                        if (vType != null) vehicleType = vType;
-                        if (vNum != null) vehicleNumber = vNum;
-                        if (pAddr != null) pickupAddress = pAddr;
-                        if (dAddr != null) destinationAddress = dAddr;
-                        if (fare != null) price = fare;
-
-                        // ✅ Launch summary screen with guaranteed values
                         Intent intent = new Intent(WaitForDriver_Activity.this, AfterRideComplete_Activity.class);
                         intent.putExtra("rideId", rideId);
                         intent.putExtra("driverName", driverName);
@@ -242,7 +259,7 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                         intent.putExtra("drop", destinationAddress);
                         intent.putExtra("price", price);
                         startActivity(intent);
-                        finish(); // finish this activity once we navigate
+                        finish();
                         break;
 
                     case "cancelled":
@@ -280,10 +297,6 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         });
     }
 
-    /**
-     * Fetch and show driver info, and cache driverName/vehicle fields.
-     * Also updates driverName into Rides/Customers/drivers ride nodes (no overwrite).
-     */
     private void showDriverDetails(String driverId) {
         if (driverId == null || driverId.isEmpty()) return;
 
@@ -301,9 +314,9 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
 
                     driverInfo.setText("Driver: " + nz(driverName) +
                             "\nPhone: " + nz(phone) +
-                            "\nVehicle: " + nz(vehicleType) + (vehicleNumber == null || vehicleNumber.isEmpty() ? "" : " (" + vehicleNumber + ")"));
+                            "\nVehicle: " + nz(vehicleType) +
+                            (vehicleNumber == null || vehicleNumber.isEmpty() ? "" : " (" + vehicleNumber + ")"));
 
-                    // Update only driverName in all places (don’t overwrite whole ride)
                     Map<String, Object> updateMap = new HashMap<>();
                     updateMap.put("driverName", driverName);
 
@@ -333,7 +346,6 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
 
         driverRef = FirebaseDatabase.getInstance().getReference("drivers").child(driverId);
 
-        // Remove previous listener if any
         if (driverLocationListener != null && driverRef != null) {
             try { driverRef.removeEventListener(driverLocationListener); } catch (Exception ignored) {}
         }
@@ -346,23 +358,22 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                 Double lat = snapshot.child("currentLat").getValue(Double.class);
                 Double lng = snapshot.child("currentLng").getValue(Double.class);
 
-                // store last known position so we can add marker once map is ready
                 lastDriverLat = lat;
                 lastDriverLng = lng;
 
                 if (lat != null && lng != null) {
-                    LatLng driverPos = new LatLng(lat, lng);
+                    GeoPoint driverPos = new GeoPoint(lat, lng);
 
-                    if (mMap != null) {
-                        if (driverMarker == null) {
-                            driverMarker = mMap.addMarker(new MarkerOptions()
-                                    .position(driverPos)
-                                    .title("Driver")
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driverPos, 15));
-                        } else {
-                            driverMarker.setPosition(driverPos);
-                        }
+                    if (driverMarker == null) {
+                        driverMarker = new Marker(mMap);
+                        driverMarker.setPosition(driverPos);
+                        driverMarker.setTitle("Driver");
+                        driverMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                        mMap.getOverlays().add(driverMarker);
+                        mMap.getController().setCenter(driverPos);
+                    } else {
+                        driverMarker.setPosition(driverPos);
+                        mMap.invalidate();
                     }
 
                     if (pickupLat != 0 && pickupLng != 0) {
@@ -370,9 +381,10 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                         Location.distanceBetween(lat, lng, pickupLat, pickupLng, results);
                         float kmAway = results[0] / 1000f;
                         distanceText.setText("Driver is " + String.format(Locale.getDefault(), "%.2f", kmAway) + " km away");
+
+                        // ✅ update route Driver → Pickup in real-time
+                        fetchRoute(lat, lng, pickupLat, pickupLng, true);
                     }
-                } else {
-                    Log.w("WaitForDriver", "Driver location missing (currentLat/currentLng)");
                 }
             }
 
@@ -381,6 +393,68 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
                 Log.e("WaitForDriver", "Driver location listener cancelled: " + error.getMessage());
             }
         });
+    }
+
+    private void fetchRoute(double startLat, double startLng, double endLat, double endLng) {
+        fetchRoute(startLat, startLng, endLat, endLng, false);
+    }
+
+    private void fetchRoute(double startLat, double startLng, double endLat, double endLng, boolean isDriverRoute) {
+        String url = "https://router.project-osrm.org/route/v1/driving/"
+                + startLng + "," + startLat + ";" + endLng + "," + endLat
+                + "?overview=full&geometries=geojson";
+
+        new Thread(() -> {
+            try {
+                URL u = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+                conn.setRequestMethod("GET");
+                InputStream in = conn.getInputStream();
+                Scanner s = new Scanner(in).useDelimiter("\\A");
+                String response = s.hasNext() ? s.next() : "";
+                in.close();
+
+                JSONObject json = new JSONObject(response);
+                JSONArray coords = json.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getJSONObject("geometry")
+                        .getJSONArray("coordinates");
+
+                ArrayList<GeoPoint> geoPoints = new ArrayList<>();
+                for (int i = 0; i < coords.length(); i++) {
+                    double lon = coords.getJSONArray(i).getDouble(0);
+                    double lat = coords.getJSONArray(i).getDouble(1);
+                    geoPoints.add(new GeoPoint(lat, lon));
+                }
+
+                runOnUiThread(() -> {
+                    Polyline line = new Polyline();
+                    line.setPoints(geoPoints);
+                    line.setWidth(8f);
+                    line.setColor(isDriverRoute ? Color.RED : Color.BLUE);
+
+                    if (isDriverRoute) {
+                        if (driverToPickupRoute != null) mMap.getOverlays().remove(driverToPickupRoute);
+                        driverToPickupRoute = line;
+                    } else {
+                        if (pickupToDropRoute != null) mMap.getOverlays().remove(pickupToDropRoute);
+                        pickupToDropRoute = line;
+                    }
+
+                    mMap.getOverlays().add(line);
+                    mMap.invalidate();
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void drawPickupToDropRoute() {
+        if (pickupLat != 0 && pickupLng != 0 && destLat != 0 && destLng != 0) {
+            fetchRoute(pickupLat, pickupLng, destLat, destLng, false);
+        }
     }
 
     private void startAutoCancelTimer() {
@@ -424,46 +498,45 @@ public class WaitForDriver_Activity extends FragmentActivity implements OnMapRea
         if (isNavigatingBack) return;
         isNavigatingBack = true;
 
-        Intent intent = new Intent(WaitForDriver_Activity.this, DashBoard.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("pickupAddress", pickupAddress);
-        intent.putExtra("destinationAddress", destinationAddress);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        if (rideListener != null && rideRef != null) rideRef.removeEventListener(rideListener);
+        if (driverLocationListener != null && driverRef != null) driverRef.removeEventListener(driverLocationListener);
+
+        Intent i = new Intent(this, EnterAddress_Fragment.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
         finish();
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // If we already have the driver's last known position add marker
-        if (lastDriverLat != null && lastDriverLng != null) {
-            LatLng driverPos = new LatLng(lastDriverLat, lastDriverLng);
-            if (driverMarker == null) {
-                driverMarker = mMap.addMarker(new MarkerOptions()
-                        .position(driverPos)
-                        .title("Driver")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driverPos, 15));
-            } else {
-                driverMarker.setPosition(driverPos);
+    private void showPickupAndDestination() {
+        if (pickupLat != 0 && pickupLng != 0) {
+            if (pickupMarker == null) {
+                pickupMarker = new Marker(mMap);
+                pickupMarker.setTitle("Pickup");
+                pickupMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                mMap.getOverlays().add(pickupMarker);
             }
+            pickupMarker.setPosition(new GeoPoint(pickupLat, pickupLng));
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (rideListener != null && rideRef != null) rideRef.removeEventListener(rideListener);
-        if (driverRef != null && driverLocationListener != null)
-            driverRef.removeEventListener(driverLocationListener);
-        if (countDownTimer != null) countDownTimer.cancel();
-    }
+        if (destLat != 0 && destLng != 0) {
+            if (destMarker == null) {
+                destMarker = new Marker(mMap);
+                destMarker.setTitle("Destination");
+                destMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                mMap.getOverlays().add(destMarker);
+            }
+            destMarker.setPosition(new GeoPoint(destLat, destLng));
+        }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        if (pickupLat != 0 && pickupLng != 0 && destLat != 0 && destLng != 0) {
+            mMap.zoomToBoundingBox(new BoundingBox(
+                    Math.max(pickupLat, destLat),
+                    Math.max(pickupLng, destLng),
+                    Math.min(pickupLat, destLat),
+                    Math.min(pickupLng, destLng)
+            ), true, 100);
+        }
+
+        mMap.invalidate();
     }
 }

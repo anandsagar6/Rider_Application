@@ -19,12 +19,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Home_Fragment extends Fragment {
+public class Service_Fragment extends Fragment {
 
     private TextView address, dropAddress;
     private LinearLayout searchBar;
 
-    public Home_Fragment() {
+    public Service_Fragment() {
         // Required empty public constructor
     }
 
@@ -33,7 +33,7 @@ public class Home_Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home_, container, false);
+        View view = inflater.inflate(R.layout.fragment_service, container, false);
 
         // Find views
         address = view.findViewById(R.id.address);

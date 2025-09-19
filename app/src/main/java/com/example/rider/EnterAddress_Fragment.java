@@ -29,7 +29,6 @@ import org.osmdroid.views.overlay.Marker;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;

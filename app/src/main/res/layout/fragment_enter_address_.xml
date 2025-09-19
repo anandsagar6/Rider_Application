@@ -56,8 +56,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/sedan"
-                app:tint="@color/material_dynamic_primary0" />
+                android:src="@drawable/location"
+                app:tint="#FF0000" />
 
             <EditText
                 android:id="@+id/address1"
@@ -69,7 +69,7 @@
                 android:textColor="@color/text"
                 android:textColorHint="#A9A9A9"
                 android:textSize="16sp"
-                android:background="@android:color/transparent"
+                android:background="@drawable/bg_edittex"
                 android:padding="8dp"/>
         </LinearLayout>
 
@@ -83,8 +83,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/premium"
-                android:tint="@color/colorPrimary" />
+                android:src="@drawable/location"
+                android:tint="#00FF0C" />
 
             <EditText
                 android:id="@+id/address2"
@@ -96,7 +96,7 @@
                 android:textColor="@color/black"
                 android:textColorHint="#A9A9A9"
                 android:textSize="16sp"
-                android:background="@android:color/transparent"
+               android:background="@drawable/bg_edittex"
                 android:padding="8dp"/>
         </LinearLayout>
 

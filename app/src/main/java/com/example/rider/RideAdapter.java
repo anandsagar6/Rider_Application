@@ -1,13 +1,14 @@
 package com.example.rider;
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -36,49 +37,39 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     public void onBindViewHolder(@NonNull RideViewHolder holder, int position) {
         HistoryRideModel r = rides.get(position);
 
-        // Pickup
-        String pickup = safe(r.getPickupName());
-        holder.tvPickup.setText("\uD83D\uDCCD From: " + pickup);
-        holder.tvPickup.setMaxLines(1);
-        holder.tvPickup.setEllipsize(TextUtils.TruncateAt.END);
+        // Pickup & Drop with bold labels
+        setBoldLabel(holder.tvPickup, "From: ", safe(r.getPickupName()));
+        setBoldLabel(holder.tvDrop, "To: ", safe(r.getDropAddress()));
 
-        // Drop
-        String drop = safe(r.getDrop());
-        holder.tvDrop.setText("🎯 To: " + drop);
 
-        // Date + time
-        String date = !TextUtils.isEmpty(r.getBookingDate()) ? r.getBookingDate() : "";
-        String time = !TextUtils.isEmpty(r.getBookingTime()) ? r.getBookingTime() : "";
-        String dateTime = (date + (date.isEmpty() || time.isEmpty() ? "" : "  ") + time).trim();
+        setBoldLabel(holder.tvDriverName, "Driver: ", safe(r.getDriverName()));
+
+
+        // Booking Date + Time
+        String dateTime = (safe(r.getBookingDate()) +
+                (r.getBookingTime() != null && !r.getBookingTime().isEmpty() ? "  " + r.getBookingTime() : "")).trim();
         holder.tvDateTime.setText(!dateTime.isEmpty() ? dateTime : "—");
 
         // Price
-        String price = safe(r.getPrice());
-        holder.tvPrice.setText(price);
+        setBoldLabel(holder.tvPrice, "Price: ",  safe(r.getPrice()));
 
-        // Type
-        String type = safe(r.getRideType());
-        holder.tvType.setText(!type.equals("—") ? capitalize(type) : "—");
 
-        // Status
+
+
+        // Status with color
         String status = safe(r.getStatus()).toLowerCase();
-        holder.tvStatus.setText(!status.equals("—") ? status.replace('_', ' ') : "—");
-
+        holder.tvStatus.setText(status.replace('_', ' '));
         int colorRes;
         switch (status) {
             case "cancelled_by_driver":
-            case "cancelled_by_you":
-            case "cancelled":
+            case "cancelled_by_system":
                 colorRes = android.R.color.holo_red_dark;
                 break;
+            case "accepted":
             case "waiting":
-            case "pending":
-            case "searching":
                 colorRes = android.R.color.holo_orange_light;
                 break;
             case "completed":
-            case "finished":
-            case "done":
                 colorRes = android.R.color.holo_green_dark;
                 break;
             default:
@@ -88,18 +79,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
 
         // Item click
         holder.itemView.setOnClickListener(v -> {
-            String rideId = r.getRideId();
-            if (!TextUtils.isEmpty(rideId)) {
-                try {
-                    Intent i = new Intent(context, Address_Activity.class);
-                    i.putExtra("rideId", rideId);
-                    context.startActivity(i);
-                } catch (Exception ex) {
-                    Toast.makeText(context, "Ride: " + rideId, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(context, "Ride details unavailable", Toast.LENGTH_SHORT).show();
-            }
+            // handle click if needed
         });
     }
 
@@ -109,7 +89,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     }
 
     static class RideViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPickup, tvDrop, tvDateTime, tvPrice, tvStatus, tvType;
+        TextView tvPickup, tvDrop, tvDateTime, tvPrice, tvStatus, tvDriverName;
 
         RideViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,19 +98,34 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
             tvDateTime = itemView.findViewById(R.id.tvDateTime);
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvType = itemView.findViewById(R.id.tvType);
+            tvDriverName = itemView.findViewById(R.id.tvDriverName);
+
         }
     }
 
-    // helper
+    // Helper: safe string
     private static String safe(String s) {
         if (s == null) return "—";
         String t = s.trim();
         return t.isEmpty() ? "—" : t;
     }
 
-    private static String capitalize(String s) {
-        if (s == null || s.isEmpty()) return s;
-        return s.substring(0,1).toUpperCase() + s.substring(1);
+    // Helper: set single bold label
+    private void setBoldLabel(TextView tv, String label, String value) {
+        SpannableString spannable = new SpannableString(label + value);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD),
+                0, label.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannable);
     }
+
+    // Helper: append another bold label to existing TextView
+    private void appendBoldLabel(TextView tv, String label, String value) {
+        SpannableString spannable = new SpannableString(label + value);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD),
+                0, label.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.append(spannable);
+    }
+
+
+
 }
