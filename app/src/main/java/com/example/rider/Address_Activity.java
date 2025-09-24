@@ -269,7 +269,7 @@ public class Address_Activity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.auto_price)).setText("₹" + df.format(8 * routeDistance));
                 ((TextView)findViewById(R.id.sedan_price)).setText("₹" + df.format(10 * routeDistance));
                 ((TextView)findViewById(R.id.premium_price)).setText("₹" + df.format(12 * routeDistance));
-                ((TextView)findViewById(R.id.abmulance_price)).setText("₹" + df.format(15 * routeDistance));
+                ((TextView)findViewById(R.id.ambulance_price)).setText("₹" + df.format(15 * routeDistance));
                 ((TextView)findViewById(R.id.Moto_price)).setText("₹" + df.format(4 * routeDistance));
 
                 // Enable ride options and choose button
@@ -300,7 +300,7 @@ public class Address_Activity extends AppCompatActivity {
             case "premium": price = ((TextView)findViewById(R.id.premium_price)).getText().toString(); break;
             case "sedan": price = ((TextView)findViewById(R.id.sedan_price)).getText().toString(); break;
             case "auto": price = ((TextView)findViewById(R.id.auto_price)).getText().toString(); break;
-            case "ambulance": price = ((TextView)findViewById(R.id.abmulance_price)).getText().toString(); break;
+            case "ambulance": price = ((TextView)findViewById(R.id.ambulance_price)).getText().toString(); break;
             case "Moto": price = ((TextView)findViewById(R.id.Moto_price)).getText().toString(); break;
         }
 

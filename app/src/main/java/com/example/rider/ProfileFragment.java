@@ -23,7 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
-    Button backToDash, account, personal_info, review, notification, fingerPrint, logoutBtn;
+    Button backToDash, account, personal_info, review, notification, about_us, logoutBtn;
+    Button privacyPolicyBtn, termsConditionsBtn;  // New buttons
     TextView profileName, profileEmail;
     FirebaseAuth mAuth;
     DatabaseReference userRef;
@@ -61,9 +62,11 @@ public class ProfileFragment extends Fragment {
         account = view.findViewById(R.id.account_setting);
         review = view.findViewById(R.id.review);
         notification = view.findViewById(R.id.notification);
-        fingerPrint = view.findViewById(R.id.finger_print);
+        about_us = view.findViewById(R.id.About_us);
         personal_info = view.findViewById(R.id.profile_info);
         logoutBtn = view.findViewById(R.id.logoutBtn);
+        privacyPolicyBtn = view.findViewById(R.id.privacy_policy);          // New
+        termsConditionsBtn = view.findViewById(R.id.terms_conditions);     // New
 
         // TextViews
         profileName = view.findViewById(R.id.profileName);
@@ -76,18 +79,16 @@ public class ProfileFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
 
-                        // Get both name and email from DB
+                        // Get name and email
                         String name = snapshot.child("name").getValue(String.class);
                         String emailFromDB = snapshot.child("email").getValue(String.class);
 
-                        // Set Name
                         if (name != null && !name.isEmpty()) {
                             profileName.setText(name);
                         } else {
                             profileName.setText("No Name Found");
                         }
 
-                        // Prefer email from DB, fallback to FirebaseAuth
                         if (emailFromDB != null && !emailFromDB.isEmpty()) {
                             profileEmail.setText(emailFromDB);
                         } else if (user.getEmail() != null) {
@@ -124,8 +125,6 @@ public class ProfileFragment extends Fragment {
         review.setOnClickListener(v ->
                 Toast.makeText(getContext(), "My Review", Toast.LENGTH_SHORT).show());
 
-        fingerPrint.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Finger Print setting", Toast.LENGTH_SHORT).show());
 
         personal_info.setOnClickListener(v ->
                 Toast.makeText(getContext(), "Personal info", Toast.LENGTH_SHORT).show());
@@ -137,6 +136,25 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), DashBoard.class);
             startActivity(intent);
         });
+
+        about_us.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+            startActivity(intent);
+            requireActivity().overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+        });
+
+        privacyPolicyBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PrivacyPolicyActivity.class);
+            startActivity(intent);
+            requireActivity().overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+        });
+
+        termsConditionsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TermsConditionsActivity.class);
+            startActivity(intent);
+            requireActivity().overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+        });
+
 
         return view;
     }

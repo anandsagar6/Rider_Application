@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".PrivacyPolicyActivity">
+
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/back_btn"
+        android:contentDescription="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"/>
+
+    <!-- Title at the top -->
+    <TextView
+        android:id="@+id/privacyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Privacy Policy"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/text"
+        android:layout_marginTop="45dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
+    <!-- Scrollable content below title -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/privacyTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/privacyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="**Privacy Policy for Rideer**\n\nEffective Date: [Insert Date]\n\n1. Introduction\nRideBook (“we”, “our”, “us”) respects your privacy. This Privacy Policy explains how we collect, use, and protect your personal information when you use our app. By using RideBook, you agree to this Privacy Policy.\n\n2. Information We Collect\n- Location Information: We collect your GPS location to provide accurate ride services and match you with nearby drivers.\n- Account Information: Name, email, phone number, and any other information you provide during registration.\n- Usage Information: Data about how you use the app, such as ride requests, vehicle preferences, and app interactions.\n- Device Information: IP address, device model, OS version, and network information.\n\n3. How We Use Your Information\n- To provide, maintain, and improve ride-booking services.\n- To match riders with drivers nearby.\n- To communicate important updates, offers, and notifications.\n- To ensure safety and security of riders and drivers.\n- To analyze usage trends and improve app performance.\n\n4. Permissions Explained\n- Internet and Network State: Required to connect the app to our servers, fetch ride requests, and provide real-time updates.\n- Location (Fine and Coarse): Required to find your pickup/drop-off locations, show your current location on the map, and calculate fare estimates.\n\n5. Data Sharing\nWe do not sell your personal data. We may share data with:\n- Drivers, for ride fulfillment purposes.\n- Service providers for analytics and support.\n- Legal authorities if required by law.\n\n6. Security\nWe use standard industry practices to protect your data. However, no method of transmission over the Internet is 100% secure.\n\n7. Changes to this Privacy Policy\nWe may update this policy from time to time. Users will be notified of significant changes through the app.\n\n8. Contact Us\nFor questions or concerns regarding your privacy, contact us at: support@ridebook.com"
+                android:textSize="16sp"
+                android:layout_marginBottom="30dp"
+                android:textColor="@color/text"
+                android:lineSpacingExtra="4dp"/>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

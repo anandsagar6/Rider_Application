@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".TermsConditionsActivity">
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/back_btn"
+        android:contentDescription="Back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="45dp"/>
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terms and Conditions"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/text"
+        android:layout_marginTop="45dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/Title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Headline -->
+
+
+            <TextView
+                android:id="@+id/termsDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="30dp"
+                android:text="
+RideBook App Terms and Conditions
+
+Effective Date: [Insert Date]\n\n
+1. Introduction
+By using RideBook, you agree to these Terms and Conditions. Please read them carefully.\n\n
+
+2. Eligibility\n
+- Users must be 18 years or older.\n
+- Drivers must follow all legal and safety rules.\n\n
+
+
+3. Booking Rides\n
+- Users can book rides through the app.\n
+- Initially, ride requests may show booked but drivers may not be available (testing phase).\n
+- All rides must comply with local laws.\n
+- Fare calculation and payment must be accurate; refunds follow app policies.\n\n
+
+4. Account Responsibility\n
+- Keep your login details confidential.\n
+- You are responsible for all activity under your account.\n\n
+
+5. Driver Acceptance\n
+- Drivers may accept or reject ride requests.\n
+- RideBook is not liable if no driver accepts your request.\n\n
+
+6. Location Services\n
+- Users must allow location access for the app to function properly.\n
+- Location is used to match riders with nearby drivers and provide accurate routes.\n\n
+
+7. Limitation of Liability\n
+- RideBook is not responsible for accidents, delays, or damages during rides.\n
+- The app is provided 'as is' without warranties.\n\n
+
+8. Modifications\n
+- Terms and Conditions may be updated from time to time.\n
+- Users should review this page regularly to stay informed.\n\n
+
+9. Contact\n
+- For any questions, feedback, or disputes, contact anandsagar0006@gmail.com
+"/>
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

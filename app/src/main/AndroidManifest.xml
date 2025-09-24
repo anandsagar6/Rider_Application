@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.rider">
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- For showing user location -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Let the app run without GPS as “optional” -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Optional GPS hardware (not required to install app) -->
     <uses-feature
         android:name="android.hardware.location.gps"
         android:required="false" />
@@ -28,6 +21,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rider"
         tools:targetApi="31">
+        <activity
+            android:name=".AboutUsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TermsConditionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WebView_Activity"
+            android:exported="false" />
         <activity
             android:name=".AfterRideComplete_Activity"
             android:exported="false" />
@@ -45,12 +50,11 @@
             android:exported="false" />
         <activity
             android:name=".SignupActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".WaitForDriver_Activity"
             android:exported="false" />
-
         <activity
             android:name=".Address_Activity"
             android:exported="false" />
@@ -60,10 +64,12 @@
         <activity
             android:name=".DashBoard"
             android:exported="true"
-            android:theme="@style/Theme.Rider" /> <!-- Google Maps API key goes here -->
+            android:theme="@style/Theme.Rider" /> <!-- Remove this if using OSM. Keep only if really using Google Maps -->
+        <!--
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5M2FhN2VkYjBhYTQ3NWE4YjUyOTJlZjNlNDdhMWM0IiwiaCI6Im11cm11cjY0In0=" />
+            android:value="YOUR_GOOGLE_MAPS_API_KEY" />
+        -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
