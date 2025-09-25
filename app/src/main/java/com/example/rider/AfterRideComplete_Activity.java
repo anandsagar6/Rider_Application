@@ -1,5 +1,6 @@
 package com.example.rider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ public class AfterRideComplete_Activity extends AppCompatActivity {
 
     private TextView tvRideId, tvDriverName, tvVehicle, tvPickup, tvDrop, tvFare;
     private RatingBar ratingBar;
-    private Button btnSubmitRating;
+    private Button btnSubmitRating,backbtn;
     private ProgressBar progressBar;
 
     private DatabaseReference ridesRef, driverRideRef;
@@ -53,6 +54,18 @@ public class AfterRideComplete_Activity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         btnSubmitRating = findViewById(R.id.btnSubmitRating);
         progressBar = findViewById(R.id.progressBar);
+        backbtn = findViewById(R.id.backButton);
+
+
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(AfterRideComplete_Activity.this, DashBoard.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
         // ✅ Get rideId from Intent
         rideId = getIntent().getStringExtra("rideId");

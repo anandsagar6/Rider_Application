@@ -23,7 +23,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText edtName, edtPhone, edtEmail, edtPassword;
     private Button btnSignup;
-    private TextView btnGotoLogin;
+    private TextView btnGotoLogin,privacy,term;
     private FirebaseAuth mAuth;
     private DatabaseReference dbRef;
     private ProgressBar progressBar;
@@ -40,6 +40,25 @@ public class SignupActivity extends AppCompatActivity {
         btnSignup = findViewById(R.id.btnSignup);
         btnGotoLogin = findViewById(R.id.btnGotoLogin);
         progressBar = findViewById(R.id.progressBarSignup);
+        privacy=findViewById(R.id.txtPrivacyPolicy);
+        term=findViewById(R.id.txtTermsConditions);
+
+
+        privacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SignupActivity.this,PrivacyPolicyActivity.class);
+                startActivity(i);
+            }
+        });
+        term.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SignupActivity.this,TermsConditionsActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         mAuth = FirebaseAuth.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference("Customers");

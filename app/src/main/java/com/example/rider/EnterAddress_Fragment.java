@@ -275,14 +275,63 @@ public class EnterAddress_Fragment extends Fragment {
     }
 
     private void fetchCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Ask for permission if not granted
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
             return;
         }
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    if (location != null) handleLocationUpdate(location);
-                });
+        // Fetch current location quickly with HIGH_ACCURACY
+        fusedLocationClient.getCurrentLocation(
+                com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+                null
+        ).addOnSuccessListener(location -> {
+            if (location != null) {
+                handleLocationUpdate(location);
+            } else {
+                // Fallback → try last known location
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(lastLocation -> {
+                            if (lastLocation != null) {
+                                handleLocationUpdate(lastLocation);
+                            } else {
+                                showEnableLocationDialog();
+                            }
+                        })
+                        .addOnFailureListener(e -> showEnableLocationDialog());
+            }
+        }).addOnFailureListener(e -> showEnableLocationDialog());
     }
+
+
+    // Show dialog if GPS/location is OFF
+    private void showEnableLocationDialog() {
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Enable Location")
+                .setMessage("Your location is turned off. Please enable location services to continue.")
+                .setPositiveButton("Settings", (dialog, which) -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchCurrentLocation(); // Permission granted → fetch location
+            } else {
+                Toast.makeText(requireContext(),
+                        "Location permission is not given. Please enable it in settings.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }

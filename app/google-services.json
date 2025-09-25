@@ -43,25 +43,6 @@
           "other_platform_oauth_client": []
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:188152886384:android:26a4e452ce00837dd0f0b5",
-        "android_client_info": {
-          "package_name": "com.example.videoapk"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA7vOVFVGIdoXvOraEcIQZIyTFegBoB8d8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
     }
   ],
   "configuration_version": "1"

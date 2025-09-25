@@ -61,47 +61,41 @@
                 android:textColor="@color/text"
                 android:lineSpacingExtra="4dp"
                 android:layout_marginBottom="30dp"
-                android:text="
-RideBook App Terms and Conditions
-
+                android:text="Rideer App Terms and Conditions\n\n
 Effective Date: [Insert Date]\n\n
-1. Introduction
-By using RideBook, you agree to these Terms and Conditions. Please read them carefully.\n\n
-
+1. Introduction\n
+By using Rideer, you agree to these Terms and Conditions. Please read them carefully.\n\n
 2. Eligibility\n
 - Users must be 18 years or older.\n
 - Drivers must follow all legal and safety rules.\n\n
-
-
 3. Booking Rides\n
 - Users can book rides through the app.\n
 - Initially, ride requests may show booked but drivers may not be available (testing phase).\n
 - All rides must comply with local laws.\n
 - Fare calculation and payment must be accurate; refunds follow app policies.\n\n
-
 4. Account Responsibility\n
 - Keep your login details confidential.\n
 - You are responsible for all activity under your account.\n\n
-
 5. Driver Acceptance\n
 - Drivers may accept or reject ride requests.\n
-- RideBook is not liable if no driver accepts your request.\n\n
-
+- Rideer is not liable if no driver accepts your request.\n\n
 6. Location Services\n
 - Users must allow location access for the app to function properly.\n
 - Location is used to match riders with nearby drivers and provide accurate routes.\n\n
-
-7. Limitation of Liability\n
-- RideBook is not responsible for accidents, delays, or damages during rides.\n
+7. Payment Information\n
+- Rideer does not currently process payments.\n
+- In the future, a secure third-party payment system may be integrated. Rideer will not store sensitive financial information directly.\n\n
+8. Demo Mode Disclaimer\n
+- Rideer is currently in demo mode. While users can book rides and drivers may see ride requests, there are no real drivers in the physical world at this time. This is for testing purposes only.\n\n
+9. Limitation of Liability\n
+- Rideer is not responsible for accidents, delays, or damages during rides.\n
 - The app is provided 'as is' without warranties.\n\n
-
-8. Modifications\n
+10. Modifications\n
 - Terms and Conditions may be updated from time to time.\n
 - Users should review this page regularly to stay informed.\n\n
-
-9. Contact\n
-- For any questions, feedback, or disputes, contact anandsagar0006@gmail.com
-"/>
+11. Contact\n
+- For any questions, feedback, or disputes, contact anandsagar0006@gmail.com"
+                />
 
 
 

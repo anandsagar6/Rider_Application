@@ -23,8 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
 
-    Button backToDash, account, personal_info, review, notification, about_us, logoutBtn;
-    Button privacyPolicyBtn, termsConditionsBtn;  // New buttons
+    Button backToDash, account, personal_info, review, notification, logoutBtn;
+    Button privacyPolicyBtn, termsConditionsBtn,about_us;  // New buttons
     TextView profileName, profileEmail;
     FirebaseAuth mAuth;
     DatabaseReference userRef;

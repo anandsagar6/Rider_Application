@@ -53,15 +53,17 @@
             <!-- Headline -->
 
 
-            <!-- Description -->
             <TextView
                 android:id="@+id/aboutDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome to RideBook!\n\nRideBook is a modern ride-booking app designed to make your daily commute fast, safe, and convenient. Our mission is to connect riders and drivers seamlessly, providing a reliable transportation experience for everyone.\n\nKey Features:\n- Quick and easy ride booking\n- Multiple vehicle options: Moto, Sedan, Premium, Auto, Ambulance\n- Real-time tracking of your ride\n- Secure and cashless payments\n- Personalized user experience\n\nThank you for choosing RideBook! We hope you enjoy your ride experience.\nFor any feedback or inquiries, contact us at: anandsagar0006@gmail.com"
                 android:textSize="16sp"
                 android:textColor="@color/text"
-                android:lineSpacingExtra="4dp"/>
+                android:lineSpacingExtra="4dp"
+                android:text="Welcome to Rideer!\n\nRideer is a modern ride-booking app designed to make your daily commute fast, safe, and convenient. Our mission is to connect riders and drivers seamlessly, providing a reliable transportation experience for everyone.\n\nKey Features:\n- Quick and easy ride booking\n- Multiple vehicle options: Moto, Sedan, Premium, Auto, Ambulance\n- Real-time tracking of your ride\n- Secure and cashless payments\n- Personalized user experience\n\nPayment Information:\n- Rideer does not currently process payments directly.\n- In the future, secure third-party payment systems may be integrated for safe transactions.\n\n⚠ Demo Mode Disclaimer:\n- Rideer is currently in demo mode. While users can book rides and drivers may see ride requests, there are no real drivers in the physical world at this time. This is for testing purposes only.\n\nThank you for choosing Rideer! We hope you enjoy your ride experience.\nFor any feedback or inquiries, contact us at: anandsagar0006@gmail.com"
+                />
+
+
 
             <!-- Made with ❤️ -->
             <TextView

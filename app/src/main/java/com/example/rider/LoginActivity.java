@@ -19,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
-    private TextView btnGotoSignup;
+    private TextView btnGotoSignup,privacy,term;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
@@ -35,6 +35,25 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnGotoSignup = findViewById(R.id.btnGotoSignup);
         progressBar = findViewById(R.id.progressBar);
+        privacy=findViewById(R.id.txtPrivacyPolicy);
+        term=findViewById(R.id.txtTermsConditions);
+
+
+        privacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this,PrivacyPolicyActivity.class);
+                startActivity(i);
+            }
+        });
+        term.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this,TermsConditionsActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         // 🔹 LOGIN button
         btnLogin.setOnClickListener(v -> {
